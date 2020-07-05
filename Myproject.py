@@ -81,17 +81,18 @@ class creat_object_base(Myclass):
         self.cols_max = self.sheet.max_column
 
     def add_object(self):
-        for i in range(2, self.rows_max):
-            for y in range(1,self.cols_max):
+        for i in range(2, self.rows_max + 1):
+            self.object = Myclass.Exam_marks()
+            for y in range(1, self.cols_max + 1):
                 res = self.sheet.cell(row = 1, column = y).value
                 val = self.sheet.cell(row = i, column = y).value
                 if res == 'student_id':
-                    ed = Myclass.Exam_marks(student_id = val)
+                    self.object.student_id = val
                 elif res == 'mark':
-                    ed =  Myclass.Exam_marks(mark = val)
-                elif res == 'subj_idk':
-                    ed = Myclass.Exam_marks(subj_id = val)
-            f = Session_maker().session_add(ed)
+                    self.object.mark = val
+                elif res == 'subj_id':
+                    self.object.subj_id = val
+            f = Session_maker().session_add(self.object)
 
 if __name__ == '__main__':
     g = creat_object_base('Exam_marks.xlsx').add_object()
