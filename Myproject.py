@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.schema import CreateTable
 from sqlalchemy.orm import sessionmaker
 import openpyxl
-
+import logging
 
 class Myclass:
     Base = declarative_base()
@@ -70,7 +70,7 @@ class Session_maker(Myclass):
         def session_add(self, db_object):
             self.session.add(db_object)
             self.session.commit()
-            print('Объект добавлен')
+            print('Объект {} добавлен'.format(self))
 
 class creat_object_base(Myclass):
     def __init__(self, name_table):
@@ -92,7 +92,10 @@ class creat_object_base(Myclass):
                     self.object.mark = val
                 elif res == 'subj_id':
                     self.object.subj_id = val
-            f = Session_maker().session_add(self.object)
+            Session_maker().session_add(self.object)
+        logging.basicConfig(filename="journal.log",  format='%(asctime)s : %(message)s', level=logging.INFO)
+        logging.info('Записи выгружены')
+
 
 if __name__ == '__main__':
-    g = creat_object_base('Exam_marks.xlsx').add_object()
+    g= creat_object_base('Exam_marks.xlsx').add_object()
