@@ -1,3 +1,6 @@
+from .models import Film, Producer
 
-dict = {'a': 'start', 'b': 'start', 'c': 'a', 'd': 'a', 'end': 'd'}
-print(list(dict))
+
+name = Film.objects.get(id = 1)
+print(type(name))
+
