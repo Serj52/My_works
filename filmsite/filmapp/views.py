@@ -16,4 +16,5 @@ def film(request, num):
         return render(request, 'filmapp/Django.html', {'name': name})
     elif num == '2':
         return render(request, 'filmapp/Mulholland_Drive.html', {'name': name})
-
+    elif num == '3':
+        return render(request, 'filmapp/Faculty.html', {'name': name})

@@ -2,7 +2,7 @@ from django.db import models
 
 class Producer(models.Model):
 
-    producer_name = models.CharField(verbose_name='Имя', max_length=50)
+    producer_name = models.CharField(verbose_name='Имя', max_length=50, unique=True)
     age = models.PositiveIntegerField(verbose_name= 'Возраст', default=0)
     country = models.CharField(verbose_name= 'Страна', max_length=50)
 

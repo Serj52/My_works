@@ -1,13 +1,15 @@
 import openpyxl
 import os, sys
+from sqlite3 import IntegrityError
 
 sys.path.append(r'C:\django_pro\Test\filmsite')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'filmsite.settings'
 import django
 
+
 django.setup()
 from filmapp.models import Film, Producer
-
+from django.db import IntegrityError
 
 class creat_object_base:
 
@@ -21,19 +23,21 @@ class creat_object_base:
     def add_object(self):
 
         if self.name == 'Режиссеры.xlsx':
-            prod = Producer()
             for i in range(2, self.rows_max + 1):
-                for y in range(1, self.cols_max + 1):
-                    title = self.sheet.cell(row=1, column=y).value
-                    val = self.sheet.cell(row=i, column=y).value
-
-                    if title == 'producer_name':
-                        prod.producer_name = val
-                    elif title == 'age':
-                        prod.age = val
-                    elif title == 'country':
-                        prod.country = val
-                prod.save()
+                prod = Producer()
+                try:
+                    for y in range(1, self.cols_max + 1):
+                        title = self.sheet.cell(row=1, column=y).value
+                        val = self.sheet.cell(row=i, column=y).value
+                        if title == 'producer_name':
+                            prod.producer_name = val
+                        elif title == 'age':
+                            prod.age = val
+                        elif title == 'country':
+                            prod.country = val
+                    prod.save()
+                except IntegrityError:
+                    continue
 
         elif self.name == 'Фильмы.xlsx':
             fil = Film()
@@ -41,15 +45,21 @@ class creat_object_base:
                 for y in range(1, self.cols_max + 1):
                     title = self.sheet.cell(row=1, column=y).value
                     val = self.sheet.cell(row=i, column=y).value
-                    if title == 'producer_name':
+                    if title == 'name':
                         fil.name = val
-                    elif title == 'age':
+                    elif title == 'genre':
                         fil.genre = val
-                    elif title == 'country':
+                    elif title == 'year':
                         fil.year = val
+                    elif title == 'producer_name':
+                        prod = Producer.objects.get(producer_name=val)
+                        fil.producer_name_id = prod.id
                 fil.save()
 
 
+
 if __name__ == '__main__':
-    a = creat_object_base('Фильмы.xlsx')
+    a = creat_object_base('Режиссеры.xlsx')
     a.add_object()
+
+
